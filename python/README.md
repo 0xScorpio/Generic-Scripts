@@ -1,1 +1,1 @@
-
+Just a bunch of python scripts that were used for some of my clients during my experiences in various security projects. All private and client confidential data has been either redacted or replaced with buffer variables that may need editing before use.
