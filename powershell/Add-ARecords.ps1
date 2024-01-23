@@ -1,6 +1,6 @@
 # Define DNS server and zone information
-$dnsServer = "INSERT-DNS-SERVER-NAME"
-$zoneName = "INSERT-DNS-ZONE-NAME"
+$dnsServer = "HOSTNAME-DOMAINCONTROLLER"
+$zoneName = "ZONE"
 
 # Import the DNS module - not sure if required
 Import-Module DnsServer
@@ -8,24 +8,27 @@ Import-Module DnsServer
 # Connect to the DNS server
 $dnsSession = New-DnsServerSession -ComputerName $dnsServer
 
-# Function to check if A record exists
+# Function to check if A record exists (with case normalization)
 function DoesARecordExist {
     param (
         [string]$recordName
     )
 
-    $existingRecord = Get-DnsServerResourceRecord -ZoneName $zoneName -Name $recordName -RRType A -ErrorAction SilentlyContinue
+    $recordNameNormalized = $recordName.ToLower()
+    $existingRecord = Get-DnsServerResourceRecord -ZoneName $zoneName -Name $recordNameNormalized -RRType A -ErrorAction SilentlyContinue
     return [bool]($existingRecord -ne $null)
 }
 
-# Function to add A record if it doesn't exist
+# Function to add A record if it doesn't exist (with case normalization)
 function AddARecord {
     param (
         [string]$recordName,
         [string]$recordIPAddress
     )
 
-    if (-not (DoesARecordExist -recordName $recordName)) {
+    $recordNameNormalized = $recordName.ToLower()
+    
+    if (-not (DoesARecordExist -recordName $recordNameNormalized)) {
         Add-DnsServerResourceRecordA -ZoneName $zoneName -Name $recordName -IPv4Address $recordIPAddress -TimeToLive 01:00:00
         Write-Host "A record added successfully: $recordName - $recordIPAddress"
     } else {
