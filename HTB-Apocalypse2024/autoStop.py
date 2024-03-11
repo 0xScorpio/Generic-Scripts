@@ -2,8 +2,8 @@ from colorama import Fore
 import socket
 
 # Define the IP address and port to connect to
-IP_ADDRESS = "94.237.53.58"
-PORT = 47075
+IP_ADDRESS = "94.237.53.58" # example ip - CHANGE THIS TO YOUR DOCKER INSTANCE
+PORT = 47075 # example port - CHANGE THIS TO YOUR DOCKER INSTANCE
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
