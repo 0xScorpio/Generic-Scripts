@@ -1,10 +1,21 @@
-function Random-Password {
+function Generate-RandomPassword {
     param (
-        [Parameter(Mandatory=$true)]
-        [int]$Length,
-        [string]$Characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?'
+        [Parameter(Mandatory)]
+        [int] $length
     )
-     
-    $password = -join (1..$length | ForEach-Object { Get-Random -InputObject $characters.ToCharArray() })
-    return $password
+ 
+    $charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?'.ToCharArray()
+ 
+    $rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+    $bytes = New-Object byte[]($length)
+  
+    $rng.GetBytes($bytes)
+  
+    $result = New-Object char[]($length)
+  
+    for ($i = 0 ; $i -lt $length ; $i++) {
+        $result[$i] = $charSet[$bytes[$i]%$charSet.Length]
+    }
+ 
+    return -join $result
 }
